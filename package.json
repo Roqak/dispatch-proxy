@@ -1,0 +1,31 @@
+{
+  "name": "dispatch-proxy",
+  "private": true,
+  "version": "0.7.0",
+  "bin": {
+    "dispatch": "bin/dispatch.mjs"
+  },
+  "scripts": {
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "test": "node --test tests/*.test.mjs",
+    "deploy": "wrangler deploy"
+  },
+  "cloudflare": {
+    "bindings": {
+      "POSTMAN_API_KEY": {
+        "description": "The shared Postman account's API key (create one at https://go.postman.co/settings/me/api-keys). The proxy serves every user through this one account."
+      },
+      "ADMIN_PASSWORD": {
+        "description": "Needed only when REQUIRE_AUTH is \"false\": the password that unlocks the admin panel via POST /auth/admin-login. Generate one with `openssl rand -hex 24`."
+      },
+      "DB": {
+        "description": "D1 database storing users, tokens, settings, uid maps and the audit log. Created automatically on first deploy; the Worker migrates its schema itself on the first request."
+      }
+    }
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@tauri-apps/plugin-updater": "^2.14.0"
+  }
+}

@@ -1,0 +1,38 @@
+// dispatch-server on Cloudflare Workers. See worker/README.md for deploy steps.
+// D1 is AUTO-PROVISIONED on deploy because database_id is omitted — the Deploy
+// to Cloudflare button (and recent `npx wrangler deploy`) create it and save
+// the real id into this file for you. To bind an existing database instead,
+// add "database_id": "<your id>" yourself.
+// The schema needs no separate apply step: the Worker migrates itself on the
+// first request (same idempotent CREATE TABLE IF NOT EXISTS the binary runs).
+{
+  "name": "dispatch-server",
+  "main": "worker/src/index.js",
+  "compatibility_date": "2024-09-25",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dispatch-server"
+    }
+  ],
+  // The admin panel is served from the existing files in server/admin/ —
+  // do not copy or edit them.
+  "assets": {
+    "directory": "server/admin",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    // "true" (default): user accounts with roles. "false": open proxy +
+    // /auth/admin-login with the ADMIN_PASSWORD secret.
+    "REQUIRE_AUTH": "true",
+    // Postman hosts EU accounts separately: "us" or "eu".
+    "POSTMAN_REGION": "us"
+    // Optional overrides (uncomment to use):
+    // "POSTMAN_API_BASE": "https://api.postman.com", // base URL override (test hook)
+    // "PBKDF2_ITERATIONS": "10000" // password-hash rounds; 100_000 fits paid plans
+  }
+  // Secrets (the Deploy button prompts for these from .dev.vars.example;
+  // manually: npx wrangler secret put <name>):
+  //   POSTMAN_API_KEY   — the shared Postman key (proxy answers 503 without it)
+  //   ADMIN_PASSWORD    — only needed when REQUIRE_AUTH is "false"
+}

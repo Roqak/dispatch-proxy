@@ -1,0 +1,6 @@
+# Static-site-only Worker: serves ./site as assets, no build step needed.
+name = "dispatch-proxy"
+compatibility_date = "2026-10-01"
+
+[assets]
+directory = "./site"

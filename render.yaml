@@ -1,0 +1,34 @@
+# Render Blueprint for dispatch-server: one web service with a persistent
+# disk for the SQLite database. Deploy via the Deploy to Render button in the
+# top-level README.
+#
+# The disk mounts at /data and the container defaults DB_PATH there, so users,
+# tokens and the audit log survive deploys and restarts.
+# POSTMAN_API_KEY is intentionally prompt-only (sync: false) — Render asks for
+# it during the button flow; it's never committed here.
+services:
+  - type: web
+    name: dispatch-server
+    runtime: docker
+    dockerfilePath: ./server/Dockerfile
+    dockerContext: ./server
+    # Disks require a paid instance type; the free plan mounts nothing. $7/mo
+    # at time of writing — users can size down/up later.
+    plan: starter
+    # The repo this button lives in is a source, not the deploy target: every
+    # click deploys the user's copy. See Render's deploy button docs.
+    autoDeployTrigger: off
+    healthCheckPath: /admin/
+    disk:
+      name: dispatch-server-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: POSTMAN_API_KEY
+        sync: false
+      - key: REQUIRE_AUTH
+        value: "true"
+      - key: POSTMAN_REGION
+        value: us
+      - key: DB_PATH
+        value: /data/dispatch-server.db

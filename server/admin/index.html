@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Dispatch Admin</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- Login view -->
+<main id="view-login" class="login-wrap">
+  <section class="card login-card">
+    <h1>Dispatch <span class="brand-accent">Admin</span></h1>
+    <p class="muted login-sub">Manage users, registration settings and the audit log.</p>
+    <form id="login-form" data-mode="credentials" novalidate>
+      <div class="field cred-only">
+        <label for="login-email">Email</label>
+        <input id="login-email" type="email" autocomplete="username" spellcheck="false">
+      </div>
+      <div class="field">
+        <label for="login-password" id="login-password-label">Password</label>
+        <input id="login-password" type="password" autocomplete="current-password">
+      </div>
+      <p class="form-error" id="login-error" role="alert" hidden></p>
+      <button class="btn primary block" id="login-submit" type="submit">Sign in</button>
+    </form>
+    <p class="mode-switch">
+      <button class="link" id="mode-toggle" type="button">Use server admin password instead</button>
+    </p>
+  </section>
+</main>
+
+<!-- App view: users / settings / audit reachable via tabs -->
+<div id="view-app" hidden>
+  <header class="topbar">
+    <div class="brand">Dispatch <span class="brand-accent">Admin</span></div>
+    <nav class="tabs" aria-label="Admin sections">
+      <button class="tab active" data-tab="users" type="button">Users</button>
+      <button class="tab" data-tab="settings" type="button">Settings</button>
+      <button class="tab" data-tab="audit" type="button">Audit</button>
+    </nav>
+    <div class="topbar-user">
+      <span id="me-email" class="muted"></span>
+      <button class="btn" id="logout-btn" type="button">Log out</button>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <!-- Users -->
+    <section id="tab-users" class="panel">
+      <div class="panel-head">
+        <h2>Users</h2>
+        <button class="btn" id="users-refresh" type="button">Refresh</button>
+      </div>
+
+      <form id="add-user-form" class="card add-user" novalidate>
+        <h3>Add user</h3>
+        <div class="add-grid">
+          <div class="field">
+            <label for="new-email">Email</label>
+            <input id="new-email" type="email" spellcheck="false" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="new-password">Password</label>
+            <input id="new-password" type="password" autocomplete="new-password">
+          </div>
+          <div class="field">
+            <label for="new-role">Role</label>
+            <select id="new-role">
+              <option value="viewer">viewer</option>
+              <option value="editor">editor</option>
+              <option value="creator">creator</option>
+              <option value="admin">admin</option>
+            </select>
+          </div>
+          <button class="btn primary" id="add-user-submit" type="submit">Create user</button>
+        </div>
+      </form>
+
+      <div class="tablewrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Email</th>
+              <th scope="col">Role</th>
+              <th scope="col">Workspace grants</th>
+              <th scope="col">Created</th>
+              <th scope="col" class="u-actions-h"><span class="visually-hidden">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="users-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section id="tab-settings" class="panel" hidden>
+      <div class="panel-head">
+        <h2>Settings</h2>
+      </div>
+      <div class="card setting-card">
+        <label class="switch" for="allow-registration">
+          <input type="checkbox" id="allow-registration">
+          <span class="slider" aria-hidden="true"></span>
+          <span class="setting-text">Allow registration
+            <small class="muted">When enabled, visitors can create their own accounts. Existing users can always sign in.</small>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Audit log -->
+    <section id="tab-audit" class="panel" hidden>
+      <div class="panel-head">
+        <h2>Audit log</h2>
+        <button class="btn" id="audit-refresh" type="button">Refresh</button>
+      </div>
+      <div class="tablewrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">User</th>
+              <th scope="col">Action</th>
+              <th scope="col">Request</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody id="audit-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# dispatch-server on Cloudflare Workers. The Deploy to Cloudflare button
+# prompts for these secrets during deploy. For manual deploys, copy to
+# .dev-vars via `npx wrangler secret put <NAME>` (do NOT put real values in
+# this file and do NOT commit .dev.vars).
+POSTMAN_API_KEY=your-pmak-key-here
+ADMIN_PASSWORD=choose-a-strong-admin-password
